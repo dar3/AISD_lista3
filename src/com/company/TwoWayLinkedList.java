@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 public class TwoWayLinkedList<T> {
 
     Element head = null;
+    Element tail = null;
 
     private class Element{
         private T value;
@@ -34,51 +35,23 @@ public class TwoWayLinkedList<T> {
             this.value= data;
             this.next = null;
             this.prev = null;
-
         }
-        /** elem bêdzie stawiony <b> za this </b>*/
-//        public void insertAfter(Element elem){
-//            elem.setNext(this.getNext());
-//            elem.setPrev(this);
-//            this.getNext().setPrev(elem);
-//            this.setNext(elem);
-//        }
-        /** elem bêdzie stawiany <b> przed this </b>*/
-//        public void insertBefore(Element elem){
-//            elem.setNext(this);
-//            elem.setPrev(this.getPrev());
-//            this.getPrev().setNext(elem);
-//            this.setPrev(elem);
-//        }
-        /** elem bêdzie usuwany z listy w której jest <p>
-         * <b>Za³o¿enie:</b> element jest ju¿ umieszczony w liœcie i nie jest to sentinel */
-//        public void remove(){
-//            this.getNext().setPrev(this.getPrev());
-//            this.getPrev().setNext(this.getNext());
-//        }
     }
-
 
     public void add(T value) {
 
         Element newElem = new Element(value);
         if(head == null){
-            head = newElem;
+            head = tail = newElem;
+            head.setPrev(null);
+            tail.setNext(null);
         }
         else {
-//            przesuwamy wskaznik do konca listy aby znalezc jej koniec
-//             po zakonczeniu while tail jest ostatnim elementem (wskazuje na ostatni element)
-            Element tail = head;
-            while (tail.getNext() != null){
-                tail = tail.getNext();
-            }
-//            wskazujemy tailem na nowy element
             tail.setNext(newElem);
-//            dodajemy nowemu elementowi wskaznik na jego poprzednika
             newElem.setPrev(tail);
+            tail = newElem;
+            tail.setNext(null);
         }
-
-
     }
 
     public void addAt(int index, T value) throws NoSuchElementException {
@@ -86,14 +59,12 @@ public class TwoWayLinkedList<T> {
         Element newElem = new Element(value);
 
         Element current = head;
-        int counter = 0;
-        while (current.getNext() != null && counter < index){
-            counter ++;
+        while (current.getNext() != null && index > 0){
+            index--;
             current = current.getNext();
         }
 
-        if(counter < index){
-
+        if(index > 0){
             throw new  NoSuchElementException();
         }
         if(head == current){
@@ -173,12 +144,12 @@ public class TwoWayLinkedList<T> {
 
         @Override
         public T next() {
-            // TODO
             if(!hasNext()){
                 throw new NoSuchElementException();
             }
+            T result = currentElement.getValue();
             currentElement = currentElement.getNext();
-            return currentElement.getPrev().getValue();
+            return result;
         }
     }
 
