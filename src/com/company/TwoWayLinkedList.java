@@ -55,7 +55,9 @@ public class TwoWayLinkedList<T> {
     }
 
     public void addAt(int index, T value) throws NoSuchElementException {
-        // TODO
+        if(isEmpty()){
+            throw new NoSuchElementException();
+        }
         Element newElem = new Element(value);
 
         Element current = head;
@@ -64,28 +66,45 @@ public class TwoWayLinkedList<T> {
             current = current.getNext();
         }
 
-        if(index > 0){
-            throw new  NoSuchElementException();
+        if(current == tail && index > 0){
+            if(index > 1){
+                throw new NoSuchElementException();
+            }else {
+                add(value);
+            }
         }
-        if(head == current){
-            head = newElem;
+        else{
+
+            if(index < 0){
+                throw new  NoSuchElementException();
+            }
+            if(head == current){
+                newElem.setNext(head);
+                newElem.setPrev(null);
+                head.setPrev(newElem);
+                head = newElem;
+            }
+            else{
+                current.getPrev().setNext(newElem);
+                newElem.setPrev(current.getPrev());
+                newElem.setNext(current);
+                current.setPrev(newElem);
+            }
         }
-        newElem.setNext(current);
-        current.setPrev(newElem);
+
 
     }
 
     public void clear() {
-        // TODO
+        head = null;
+        tail = null;
     }
 
     public boolean contains(T value) {
-        // TODO
-        return false;
+        return indexOf(value) != -1;
     }
 
     public T get(int index) throws NoSuchElementException {
-        // TODO
         Element elem = head;
         int counter = 0;
         while(elem != null && counter < index){
@@ -101,13 +120,40 @@ public class TwoWayLinkedList<T> {
     }
 
     public void set(int index, T value) throws NoSuchElementException {
-        // TODO
+        if(isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        Element current = head;
+        if(index < 0){
+            throw new NoSuchElementException();
+        }
+        while (current.getNext() != null && index > 0){
+            index--;
+            current = current.getNext();
+        }
+        if(index > 0){
+            throw new NoSuchElementException();
+        }
+        else {
+            current.setValue(value);
+        }
     }
 
     public int indexOf(T value) {
-        // TODO
-        return 0;
+        Element current = head;
+        int counter = 0;
+        while(!value.equals(current.getValue()) && current != tail) {
+            counter++;
+            current = current.getNext();
+        }
+        if(!value.equals(current.getValue())){
+            return -1;
+        }
+
+        return  counter;
     }
+
+
 
     public boolean isEmpty() {
 
@@ -115,18 +161,90 @@ public class TwoWayLinkedList<T> {
     }
 
     public T removeAt(int index) throws NoSuchElementException {
-        // TODO
-        return null;
+
+        Element current = head;
+
+        if(isEmpty()){
+            throw new NoSuchElementException();
+        }
+
+        if(index == 0){
+            if(current.getNext() != null){
+
+                current.getNext().setPrev(null);
+                head = current.getNext();
+                return current.getValue();
+
+            }else{
+                clear();
+                return current.getValue();
+            }
+        }
+        if(index < 0){
+            throw new NoSuchElementException();
+        }
+        while (current.getNext() != null && index > 0){
+            index--;
+            current = current.getNext();
+        }
+
+        if(index > 0){
+            throw new NoSuchElementException();
+        }
+        else {
+            if(current.getNext() == null && current.getPrev() != null){
+                current.getPrev().setNext(null);
+                return current.getValue();
+            }
+            if(current.getNext() == null){
+                current.setPrev(null);
+            }
+            else {
+                current.getPrev().setNext(current.getNext());
+                current.getNext().setPrev(current.getPrev());
+            }
+
+        }
+      return current.getValue();
     }
 
     public boolean remove(T value) {
         // TODO
-        return false;
+        Element current = head;
+        while(!value.equals(current.getValue()) && current != tail) {
+            current = current.getNext();
+        }
+        if(!value.equals(current.getValue())){
+            return false;
+        }else {
+            if(current != head){
+
+                current.getPrev().setNext(current.getNext());
+            } else {
+
+                if(current != tail){
+                    current.getNext().setPrev(current.getPrev());
+                    head = current.getNext();
+                }
+            }
+            return true;
+        }
     }
 
     public int size() {
         // TODO
-        return 0;
+        Element current = head;
+        if(head == null){
+            return 0;
+        }
+        int counter = 1;
+        while (current.getNext() != null) {
+            counter++;
+            current = current.getNext();
+
+        }
+
+        return counter;
     }
 
     public Iterator<T> iterator() {
@@ -157,11 +275,19 @@ public class TwoWayLinkedList<T> {
             TwoWayLinkedList<T> anotherList,
             int beforeIndex) throws NoSuchElementException {
         // TODO
+        for (int i = anotherList.size(); i > 0; i--){
+
+            addAt(beforeIndex, anotherList.get(i-1));
+        }
     }
 
     public void insert(
             TwoWayLinkedList<T> anotherList,
             T beforeElement) throws NoSuchElementException {
         // TODO
+       int index = indexOf(beforeElement);
+
+       insert(anotherList, index);
+
     }
 }
