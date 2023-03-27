@@ -1,11 +1,28 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class Run {
 
     public static void main(String[] args) {
-        TwoWayLinkedList<String> list = new TwoWayLinkedList<>();
+        TwoWayLinkedList<Integer> listInteger = new TwoWayLinkedList<>();
+        TwoWayLinkedList<Integer> result;
+
+        listInteger.add(1);
+        listInteger.add(1);
+        listInteger.add(2);
+        listInteger.add(3);
+        listInteger.add(3);
+
+        result = Distincter.distinct(listInteger);
+        Iterator<Integer> iterator = result.iterator();
+        while (iterator.hasNext()){
+            System.out.println(iterator.next());
+        }
+
+//        TwoWayLinkedList<String> list = new TwoWayLinkedList<>();
+/*
         TwoWayLinkedList<String> list2 = new TwoWayLinkedList<>();
         list.add("d");
         list.add("e");
@@ -21,6 +38,7 @@ public class Run {
         while (iterator.hasNext()){
             System.out.println(iterator.next());
         }
+*/
 
 //        list.add("a");
 //        list.add("b");

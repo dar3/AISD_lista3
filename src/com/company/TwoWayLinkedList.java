@@ -141,6 +141,7 @@ public class TwoWayLinkedList<T> {
 
     public int indexOf(T value) {
         Element current = head;
+        if (isEmpty()) return -1;
         int counter = 0;
         while(!value.equals(current.getValue()) && current != tail) {
             counter++;
